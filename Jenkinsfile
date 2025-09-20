@@ -2,29 +2,31 @@ pipeline {
     agent any
 
     environment {
-        PYTHON_PATH = "C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python310\\python.exe"
+        PYTHON = "C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python310\\python.exe"
+        VENV_DIR = "${WORKSPACE}\\venv"
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout SCM') {
             steps {
-                // Ensure it checks out the main branch
-                git branch: 'main', url: 'https://github.com/iiamgautam7/gym-bot.git'
+                checkout scm
             }
         }
 
         stage('Setup Python') {
             steps {
                 bat """
-                REM Create virtual environment
-                ${env.PYTHON_PATH} -m venv venv
+                REM Create virtual environment if not exists
+                if not exist "%VENV_DIR%" (
+                    ${PYTHON} -m venv %VENV_DIR%
+                )
 
                 REM Activate virtual environment and upgrade pip
-                call venv\\Scripts\\activate
-                venv\\Scripts\\python.exe -m pip install --upgrade pip
+                call %VENV_DIR%\\Scripts\\activate
+                %VENV_DIR%\\Scripts\\python.exe -m pip install --upgrade pip
 
-                REM Install requirements
-                venv\\Scripts\\python.exe -m pip install -r requirements.txt
+                REM Install required packages
+                %VENV_DIR%\\Scripts\\python.exe -m pip install -r requirements.txt
                 """
             }
         }
@@ -32,9 +34,12 @@ pipeline {
         stage('Run Flask App') {
             steps {
                 bat """
-                REM Activate virtual environment and run Flask
-                call venv\\Scripts\\activate
-                venv\\Scripts\\python.exe app.py
+                REM Activate venv and run Flask in background
+                call %VENV_DIR%\\Scripts\\activate
+                start /B %VENV_DIR%\\Scripts\\python.exe app.py > flask.log 2>&1
+
+                REM Wait 5 seconds for Flask to start
+                timeout /T 5
                 """
             }
         }
@@ -42,14 +47,20 @@ pipeline {
         stage('Run Gym Bot') {
             steps {
                 bat """
-                call venv\\Scripts\\activate
-                venv\\Scripts\\python.exe gymbot.py
+                REM Activate venv and run Gym Bot
+                call %VENV_DIR%\\Scripts\\activate
+                %VENV_DIR%\\Scripts\\python.exe gymbot.py
                 """
             }
         }
     }
 
-    triggers {
-        cron('0 18 * * *')  // Runs daily at 6 PM
+    post {
+        always {
+            bat """
+            REM Optional: stop Flask if needed (Windows)
+            taskkill /F /IM python.exe /T
+            """
+        }
     }
 }
