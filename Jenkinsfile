@@ -1,48 +1,55 @@
 pipeline {
     agent any
+
+    environment {
+        PYTHON_PATH = "C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python310\\python.exe"
+    }
+
     stages {
         stage('Checkout') {
             steps {
+                // Ensure it checks out the main branch
                 git branch: 'main', url: 'https://github.com/iiamgautam7/gym-bot.git'
             }
         }
+
         stage('Setup Python') {
             steps {
-                bat '''
+                bat """
                 REM Create virtual environment
-                C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python310\\python.exe -m venv venv
-                
-                REM Activate virtual environment
+                ${env.PYTHON_PATH} -m venv venv
+
+                REM Activate virtual environment and upgrade pip
                 call venv\\Scripts\\activate
-                
-                REM Upgrade pip and install requirements
-                pip install --upgrade pip
-                pip install -r requirements.txt
-                '''
+                venv\\Scripts\\python.exe -m pip install --upgrade pip
+
+                REM Install requirements
+                venv\\Scripts\\python.exe -m pip install -r requirements.txt
+                """
             }
         }
+
         stage('Run Flask App') {
             steps {
-                bat '''
-                REM Start Flask app in background
-                start /B call venv\\Scripts\\activate && python app.py
-                
-                REM Wait 5 seconds for server to start
-                timeout /T 5
-                '''
+                bat """
+                REM Activate virtual environment and run Flask
+                call venv\\Scripts\\activate
+                venv\\Scripts\\python.exe app.py
+                """
             }
         }
+
         stage('Run Gym Bot') {
             steps {
-                bat '''
-                REM Run Selenium bot
+                bat """
                 call venv\\Scripts\\activate
-                python gymbot.py
-                '''
+                venv\\Scripts\\python.exe gymbot.py
+                """
             }
         }
     }
+
     triggers {
-        cron('0 18 * * *')  // Run daily at 6 PM
+        cron('0 18 * * *')  // Runs daily at 6 PM
     }
 }
