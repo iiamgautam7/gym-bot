@@ -31,11 +31,11 @@ pipeline {
         stage('Run Flask App') {
             steps {
                 bat """
-                REM Run Flask app in a separate window (doesn't block Jenkins)
-                start "" /MIN cmd /c "%VENV_DIR%\\Scripts\\python.exe app.py"
-                
-                REM Wait 5 seconds for Flask to start
-                timeout /T 5
+                REM Run Flask app in background using START with /B (no interactive input)
+                start "" /B "%VENV_DIR%\\Scripts\\python.exe" app.py
+
+                REM Wait 10 seconds using non-interactive method (powershell sleep)
+                powershell -Command "Start-Sleep -Seconds 10"
                 """
             }
         }
