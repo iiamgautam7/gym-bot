@@ -3,33 +3,33 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/iiamgautam7/gym-bot.git'
+                git 'https://github.com/iiamgautam7/gym-bot.git'
             }
         }
         stage('Setup Python') {
             steps {
-                bat '''
-                python -m venv venv
-                venv\\Scripts\\activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
-                '''
+                bat """
+                C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python310\\python.exe -m venv venv
+                call venv\\Scripts\\activate
+                C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pip.exe install --upgrade pip
+                C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pip.exe install -r requirements.txt
+                """
             }
         }
         stage('Run Flask App') {
             steps {
-                bat '''
-                start /B python app.py
+                bat """
+                start /B venv\\Scripts\\python.exe app.py
                 timeout /T 5
-                '''
+                """
             }
         }
         stage('Run Gym Bot') {
             steps {
-                bat '''
-                venv\\Scripts\\activate
-                python gymbot.py
-                '''
+                bat """
+                call venv\\Scripts\\activate
+                venv\\Scripts\\python.exe gymbot.py
+                """
             }
         }
     }
