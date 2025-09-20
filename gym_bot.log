@@ -1,0 +1,12 @@
+2025-09-20 16:13:58,856 - ERROR - Failed to initialize Chrome driver: Message: Unable to obtain driver for chrome; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors/driver_location
+
+2025-09-20 16:15:07,019 - ERROR - Failed to initialize Chrome driver: Message: Unable to obtain driver for chrome; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors/driver_location
+
+2025-09-20 16:21:08,106 - ERROR - Failed to initialize Chrome driver: Message: Unable to obtain driver for chrome; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors/driver_location
+
+2025-09-20 16:24:38,284 - ERROR - Failed to initialize Chrome driver: Message: Unable to obtain driver for chrome; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors/driver_location
+
+2025-09-20 16:25:22,823 - INFO - Chrome driver initialized successfully
+2025-09-20 16:25:22,823 - INFO - Attempting to login...
+2025-09-20 16:25:35,161 - ERROR - Login timeout - page took too long to load
+2025-09-20 16:25:38,217 - INFO - Browser closed
