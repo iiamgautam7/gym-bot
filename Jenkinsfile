@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/iiamgautam7/gym-bot.git'
+                git branch: 'main', url: 'https://github.com/iiamgautam7/gym-bot.git'
             }
         }
         stage('Setup Python') {
