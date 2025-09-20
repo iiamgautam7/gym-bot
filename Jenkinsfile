@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/your-username/gym-bot.git'
+                git 'https://github.com/iiamgautam7/gym-bot.git'
             }
         }
         stage('Setup Python') {
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 bat '''
                 venv\\Scripts\\activate
-                python gym.py
+                python gymbot.py
                 '''
             }
         }
