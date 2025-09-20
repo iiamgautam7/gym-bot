@@ -22,7 +22,8 @@ class GymReservationBot:
     # Use your ChromeDriver path
         service = Service(r"C:\Windows\chromedriver.exe")
         self.driver = webdriver.Chrome(service=service, options=options)
-        print("✅ ChromeDriver initialized")
+        print("[OK] ChromeDriver initialized")
+
 
     def login(self):
         """Login to the Flask gym site"""
@@ -33,7 +34,7 @@ class GymReservationBot:
         self.driver.find_element(By.NAME, "username").send_keys(self.username)
         self.driver.find_element(By.NAME, "password").send_keys(self.password)
         self.driver.find_element(By.TAG_NAME, "button").click()
-        print("✅ Logged in successfully")
+        print("[OK] Logged in successfully")
 
     def make_reservation(self):
         """Book the preferred time slot"""
@@ -45,9 +46,9 @@ class GymReservationBot:
         for s in slots:
             if self.slot in s.text and "Already Reserved" not in s.text:
                 s.find_element(By.TAG_NAME, "button").click()
-                print(f"✅ Reserved {self.slot}")
+                print(f"[ok] Reserved {self.slot}")
                 return
-        print("⚠️ Slot not available")
+        print(" Slot not available")
 
     def run(self):
         """Run the full bot"""
@@ -55,7 +56,8 @@ class GymReservationBot:
         self.login()
         self.make_reservation()
         self.driver.quit()
-        print("✅ Bot finished execution")
+        print("[ok] Bot finished execution")
 
 if __name__ == "__main__":
     GymReservationBot().run()
+
